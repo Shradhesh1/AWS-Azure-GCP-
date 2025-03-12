@@ -1,0 +1,91 @@
+Steps to Create a RHEL 7 Instance Using AWS CloudFormation
+Create CloudFormation Template
+Create CloudFormation Stack Using the Template
+Verify and Access the Instance
+Step 1: CloudFormation Template
+Here’s a basic YAML CloudFormation template to create an EC2 instance with RHEL 7 in AWS:
+
+yaml
+Copy
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Launch RHEL 7 Instance in AWS
+
+Resources:
+  RHEL7Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro  # Choose the instance type you want
+      KeyName: my-key-pair    # Name of the SSH key pair to access the instance
+      ImageId: ami-0a913d474a9f23179  # RHEL 7 AMI ID, update this to the region-specific ID
+      SecurityGroups:
+        - Ref: InstanceSecurityGroup  # Use the defined security group below
+      AvailabilityZone: us-east-1a  # Set the availability zone (optional)
+      Tags:
+        - Key: Name
+          Value: MyRHEL7Instance  # Name of the instance
+
+  InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow SSH and HTTP
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '22'  # Allow SSH access
+          ToPort: '22'
+          CidrIp: '0.0.0.0/0'  # Allow SSH from any IP (consider restricting this)
+        - IpProtocol: tcp
+          FromPort: '80'  # Allow HTTP access
+          ToPort: '80'
+          CidrIp: '0.0.0.0/0'  # Allow HTTP from any IP
+Key Elements in the Template:
+AWSTemplateFormatVersion: Specifies the version of the CloudFormation template.
+Resources:
+RHEL7Instance: The EC2 instance resource that will be launched.
+InstanceType: Defines the instance type (e.g., t2.micro for free tier).
+KeyName: The SSH key pair you will use to access the instance.
+ImageId: The AMI ID for RHEL 7. You will need to find the correct AMI ID for your AWS region. You can get it from the AWS Console or using AWS CLI:
+bash
+Copy
+aws ec2 describe-images --filters "Name=name,Values=RHEL-7.9*"
+SecurityGroups: The security group applied to the instance. The security group allows SSH (port 22) and HTTP (port 80) access.
+AvailabilityZone: Optional. You can specify the availability zone for the instance.
+Tags: Tags help identify your resources. Here, we’ve set the name of the instance to "MyRHEL7Instance".
+InstanceSecurityGroup: The security group created to allow SSH (port 22) and HTTP (port 80) traffic.
+Step 2: Create CloudFormation Stack
+Log in to the AWS Management Console.
+Go to CloudFormation in the AWS Management Console.
+Click Create Stack and select With new resources (standard).
+Choose the Upload a template file option.
+Upload the YAML template (rhel7-cloudformation.yml) you created earlier.
+Click Next.
+Enter a Stack name (e.g., MyRHEL7InstanceStack).
+Configure stack options (you can leave the defaults if you don’t need custom settings).
+Review the details and click Create stack.
+CloudFormation will now create the resources defined in the template (an EC2 instance with RHEL 7, a security group, and any other resources you have defined).
+
+Step 3: Verify and Access the Instance
+Monitor the Stack Creation:
+
+You can monitor the creation process in the CloudFormation console.
+Once the stack creation is complete, your RHEL 7 EC2 instance will be available.
+Access the Instance:
+
+After the stack is created, go to the EC2 Console and find your instance under the "Instances" section.
+Check the Public IP or Elastic IP assigned to the instance.
+SSH into the instance using the SSH key pair you specified in the template.
+For example:
+
+bash
+Copy
+ssh -i /path/to/your-key-pair.pem ec2-user@<Public-IP>
+Replace /path/to/your-key-pair.pem with the path to your SSH key, and <Public-IP> with the actual IP address of the instance.
+
+Important Notes:
+AMI ID: The AMI ID for RHEL 7 differs by region, so make sure to use the correct one for your region. You can find the latest RHEL 7 AMI ID for your region from the AWS Marketplace.
+
+Key Pair: You must have an existing SSH key pair in the AWS region where you're creating the instance. If you don't have one, you can create a new key pair in the EC2 console under Key Pairs.
+
+Security Group: The example template opens ports 22 (SSH) and 80 (HTTP). For better security, restrict access to specific IP addresses or ranges for SSH access (e.g., CidrIp: '203.0.113.0/24').
+
+Free Tier: The t2.micro instance type is eligible for the AWS Free Tier if you’re within the limits of the free tier.
+

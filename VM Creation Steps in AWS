@@ -1,0 +1,88 @@
+To create an RHEL 7 (Red Hat Enterprise Linux 7) instance in AWS, follow these steps. AWS provides official RHEL AMIs (Amazon Machine Images), and you can launch an instance with one of these images.
+
+Prerequisites:
+An AWS account.
+AWS IAM user/role with sufficient permissions to create EC2 instances.
+AWS CLI or Console access.
+Steps to Launch an RHEL 7 Instance in AWS:
+1. Log into AWS Management Console
+Go to the AWS Management Console and log in with your credentials.
+
+2. Open the EC2 Dashboard
+Once you're logged into the AWS Console:
+
+Navigate to EC2 by typing "EC2" in the search bar and selecting EC2 from the list of services.
+3. Launch a New Instance
+In the EC2 Dashboard, click on Launch Instance to create a new virtual machine.
+
+Choose an Amazon Machine Image (AMI):
+
+On the Choose an Amazon Machine Image (AMI) page, scroll down or search for RHEL 7 in the search bar.
+Select the Red Hat Enterprise Linux 7 (HVM), SSD Volume Type AMI. AWS provides various RHEL 7 versions, so choose the one you need.
+Choose an Instance Type:
+
+Choose the desired instance type. For example, t2.micro for testing purposes (eligible for the Free Tier, if available).
+Click on Next: Configure Instance Details.
+Configure Instance Details:
+
+Select the VPC, Subnet, and other network settings if you have specific needs. By default, you can use the default VPC and subnet.
+Set any additional settings like IAM roles or monitoring as per your requirements.
+Click on Next: Add Storage.
+Add Storage:
+
+You can modify the size of the root EBS volume if needed. The default size is typically 8 GB.
+If you need additional storage, you can add more EBS volumes here.
+Click Next: Add Tags.
+Add Tags:
+
+Optionally, you can add tags to your instance for easy identification (e.g., Name: MyRHEL7Instance).
+Click Next: Configure Security Group.
+Configure Security Group:
+
+If you don’t have an existing security group, create a new one.
+Add rules to allow SSH (port 22) access so that you can connect to the instance. You might also want to allow HTTP (port 80) and HTTPS (port 443) if it's a web server.
+For SSH: Add a rule with:
+Type: SSH
+Protocol: TCP
+Port: 22
+Source: My IP (or 0.0.0.0/0 for open access, but not recommended for security reasons).
+Click on Review and Launch.
+Review and Launch:
+
+Review your configuration.
+If everything looks good, click Launch.
+A pop-up will appear asking for an SSH Key Pair.
+If you don’t have a key pair, select Create a new key pair.
+Name your key pair (e.g., rhel7-key), and click Download Key Pair. This .pem file is required to SSH into your instance.
+Click Launch Instances.
+4. Connect to Your Instance
+Once the instance is launched, follow these steps to connect via SSH:
+
+Go to the EC2 Console:
+
+Navigate to the Instances section in the EC2 Dashboard.
+Find your newly created RHEL 7 instance and note the Public IP address or Elastic IP (if assigned).
+SSH into the Instance:
+
+Open your terminal (Linux/macOS) or an SSH client (e.g., PuTTY for Windows).
+
+Change the permissions of the .pem file you downloaded for the SSH key:
+
+bash
+Copy
+chmod 400 rhel7-key.pem
+SSH into the instance:
+
+bash
+Copy
+ssh -i /path/to/rhel7-key.pem ec2-user@<Public-IP>
+Replace /path/to/rhel7-key.pem with the actual path to your .pem file and <Public-IP> with the public IP address of your instance.
+
+5. Update Your Instance (Optional but Recommended)
+After logging in, it’s a good practice to update your RHEL 7 instance:
+
+bash
+Copy
+sudo yum update -y
+This will update the installed packages to the latest versions.
+

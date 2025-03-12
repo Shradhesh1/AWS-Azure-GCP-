@@ -1,0 +1,68 @@
+Steps to Create an RHEL 7 VM on Azure
+1. Log into Azure Portal
+Navigate to the Azure Portal and log in using your credentials.
+2. Create a New Virtual Machine
+In the Azure Portal, go to the Virtual Machines section by searching for "Virtual Machines" in the search bar or selecting it from the left-hand menu.
+
+Click on "Create" and then select "Azure virtual machine" to begin the creation process.
+
+Select Subscription:
+
+Choose the Azure subscription you want to use (if you have multiple subscriptions).
+Create a Resource Group:
+
+If you don’t already have a resource group, create a new one. A resource group helps organize and manage your Azure resources.
+Example: my-rhel7-vms.
+VM Basics: Fill in the required fields:
+
+Region: Choose the Azure region where you want to create the VM (e.g., East US, West Europe).
+Image: Search for "RHEL" in the "Image" dropdown. Select the Red Hat Enterprise Linux 7 image from the marketplace.
+Size: Choose an appropriate VM size. For instance, Standard_B1ms (1 vCPU, 2GB RAM) for smaller workloads. Choose according to your needs.
+Authentication Type: You can either use SSH public key or Password.
+If you choose SSH public key, you can either generate a new SSH key pair or upload an existing one.
+For Password, you’ll need to enter a username and a password for logging in.
+Username: The default user for RHEL is typically ec2-user (if SSH) or azureuser (if password-based login).
+Public IP: Choose if you want a static or dynamic public IP. For most cases, Dynamic is sufficient unless you need a fixed IP.
+Disks:
+
+By default, an OS disk will be created with the RHEL 7 image.
+Optionally, you can configure additional data disks depending on your storage needs.
+Networking:
+
+Virtual Network (VNet): Choose an existing VNet or create a new one.
+Subnet: Choose an existing subnet or create a new one.
+Public IP: Choose a Dynamic IP for automatic IP allocation or Static IP if you want a fixed IP.
+Network Security Group (NSG): Select an existing NSG or create a new one.
+Add a rule to allow SSH (port 22) for remote access to the VM.
+Management, Monitoring, and Advanced Options:
+
+You can leave the default options for monitoring unless you need specific configurations for logging, auto-scaling, or backup.
+Review + Create:
+
+Review the configuration and settings you’ve entered.
+Click Create to start provisioning the RHEL 7 VM.
+3. Accessing Your RHEL 7 VM
+Once the VM is created, follow these steps to access it:
+
+Navigate to the "Virtual Machines" section in the Azure Portal.
+Select your RHEL 7 VM.
+Under the "Overview" section, you will see the Public IP address of the VM.
+If you used SSH for authentication:
+Open a terminal (on Linux/macOS) or use an SSH client (like PuTTY on Windows).
+Use the following command to SSH into the VM:
+bash
+Copy
+ssh -i /path/to/your/private-key.pem azureuser@<Public-IP>
+Replace /path/to/your/private-key.pem with your private SSH key file, and <Public-IP> with the actual IP of your VM.
+If you used password-based authentication, you can simply SSH with:
+bash
+Copy
+ssh azureuser@<Public-IP>
+Then, enter the password when prompted.
+4. Update Your RHEL 7 VM
+Once you’re logged into the VM, it’s a good practice to update your RHEL 7 instance:
+
+bash
+Copy
+sudo yum update -y
+This ensures that all installed packages are up-to-date.

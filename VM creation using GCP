@@ -1,0 +1,84 @@
+1. Log into Google Cloud Console
+Go to the Google Cloud Console.
+Sign in using your Google Cloud account credentials.
+2. Create a New Project (Optional)
+If you don’t have a project set up already, you can create a new one:
+
+In the Google Cloud Console, go to the "Select a project" dropdown at the top of the page.
+Click "New Project".
+Enter a name and select a billing account (if you haven't already set one up).
+Click "Create".
+3. Enable Google Cloud Compute API (If Not Already Enabled)
+Ensure the Compute Engine API is enabled for your project. If it’s not enabled, go to the API Library and enable it.
+
+4. Create the Virtual Machine
+Navigate to Compute Engine:
+
+In the Google Cloud Console, use the search bar and type "Compute Engine".
+Click "VM Instances" under the Compute Engine section.
+Click on "Create Instance":
+
+This will open the Create an instance page where you can configure the VM.
+Configure the VM:
+
+Name: Enter a name for your VM (e.g., rhel7-vm).
+Region: Select the region where you want to create the VM (e.g., us-central1, europe-west1).
+Zone: Select the specific availability zone within the region (e.g., us-central1-a).
+Machine Type: Select the desired machine type. For example, use e2-medium for a smaller machine (2 vCPUs, 8GB RAM) or choose another instance size based on your requirements.
+Choose the RHEL 7 Image:
+
+Under the Boot Disk section, click "Change".
+In the pop-up window, under the OS images tab, select "Red Hat" from the dropdown.
+Select the latest RHEL 7 version from the list of available images. If it's not listed directly, search for RHEL to find the appropriate version.
+Example: RHEL 7.9 (x86_64).
+Set Disk Configuration:
+
+By default, the boot disk will be created with the image selected. You can adjust the disk size and type (e.g., SSD or Standard persistent disk).
+You can add additional disks as needed.
+Network Settings:
+
+Under Network interfaces, you can use the default network or configure a custom network. The default setup works for most use cases.
+Enable External IP (which is the default) to allow internet access to the VM, or set it to None if you don’t want the VM to have a public IP address.
+Firewall Rules:
+
+Enable the Allow HTTP traffic and Allow HTTPS traffic if you plan to use the VM as a web server.
+Ensure Allow SSH traffic is enabled to allow SSH access to the VM.
+Click "Create":
+
+Once all configurations are set, click Create to launch the VM.
+5. Connect to Your RHEL 7 VM
+Once the VM is created, you can SSH into it. Follow these steps:
+
+In the Google Cloud Console, navigate to VM Instances.
+
+Find your newly created RHEL 7 VM in the list and note the External IP.
+
+You can use the SSH button in the console to connect to the VM directly.
+
+Alternatively, you can SSH from your local machine using the following command (ensure you have the Google Cloud SDK installed and configured):
+bash
+Copy
+gcloud compute ssh <your-instance-name> --zone <your-zone>
+For example:
+bash
+Copy
+gcloud compute ssh rhel7-vm --zone us-central1-a
+If you have not set up the gcloud CLI yet, follow the GCP installation guide.
+Once logged in, you can confirm the VM is running RHEL 7 by checking the OS version:
+
+bash
+Copy
+cat /etc/redhat-release
+This should return something like:
+
+bash
+Copy
+Red Hat Enterprise Linux Server release 7.x (Maipo)
+6. Update Your RHEL 7 VM
+After logging into the RHEL 7 VM, it’s a good practice to update it:
+
+bash
+Copy
+sudo yum update -y
+This will ensure all installed packages are up-to-date with the latest patches.
+
